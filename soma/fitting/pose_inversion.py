@@ -1050,7 +1050,7 @@ class PoseInversion:
             # Create an internal low-LOD layer for the refit.  Procedural mode
             # remains enabled here so autograd refinement can evaluate twist
             # LBS through the same public-pose API as the original layer.
-            from .body import SOMALayer
+            from ..body import SOMALayer  # 本地修：上游相对导入少一级
 
             template_rig_path = getattr(soma_layer, "procedural_template_rig_path", None)
             self.soma = SOMALayer(
