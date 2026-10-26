@@ -357,6 +357,14 @@ class TestInvert:
         assert mean_err < 0.01, f"Mean vertex error too high: {mean_err:.6f} m"
         assert max_err < 0.05, f"Max vertex error too high: {max_err:.6f} m"
 
+    def test_autograd_refinement_runs_multiple_steps(self, soma_and_inv):
+        """autograd_iters > 1 must not fail with a second backward through
+        the identity caches built by prepare_identity()."""
+        soma, inv = soma_and_inv
+        verts, _ = _load_motion(soma, frames=[0])
+        result = inv.fit(verts, lie_iters=0, autograd_iters=3)
+        assert result["per_vertex_error"].mean().item() < 0.02
+
     def test_batch_roundtrip(self, soma_and_inv):
         """Multiple diverse frames: consistent low error across batch."""
         soma, inv = soma_and_inv
